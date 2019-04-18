@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+		<!-- Remove Tap Highlight on Windows Phone IE -->
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<title>NBA</title>
+
+		<!--======================================================
+			CSS Stylesheets
+		======================================================-->
+		<link rel='stylesheet' type='text/css' href='/static/css/bootstrap.min.css'>
+		<link rel='stylesheet' type='text/css' href='/static/css/font-awesome.min.css'>
+		<link rel='stylesheet' type='text/css' href='/static/css/animate.css'>
+		<link rel='stylesheet' type='text/css' href='/static/css/style.css'>
+
+	</head>
+
+	<body>
+		<!--======================================================
+			Navbar
+		======================================================-->
+        {% block content %}
+		<nav class='navbar'>
+			<div class='container'>
+				<div class='navbar-header'>
+					<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#nav-collapse' aria-expanded='false'>
+						<span class='sr-only' >Toggle navigation</span>
+						<span class='icon-bar' ></span>
+						<span class='icon-bar' ></span>
+						<span class='icon-bar' ></span>
+					</button>
+
+					<div class="row">
+						<div class="col-md-2 col-sm-3 col-xs-hidden">
+							<a href="{{ url_for('index')}}" class='navbar-brand'>
+								<img class='logo-light' src='../static/img/nav_logoman.svg' alt>
+							</a>
+						</div>
+						<div class="col-md-10 col-sm-9 col-xs-6 search-box-margin">
+							<form class="keyword_searchForm" name="searchByKeyword" action="searchByKeyword" method="post">
+								<div class="search-icon">
+									<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 16px; width: 16px; display: block; fill: currentcolor;">
+										<path d="m10.4 18.2c-4.2-.6-7.2-4.5-6.6-8.8.6-4.2 4.5-7.2 8.8-6.6 4.2.6 7.2 4.5 6.6 8.8-.6 4.2-4.6 7.2-8.8 6.6m12.6 3.8-5-5c1.4-1.4 2.3-3.1 2.6-5.2.7-5.1-2.8-9.7-7.8-10.5-5-.7-9.7 2.8-10.5 7.9-.7 5.1 2.8 9.7 7.8 10.5 2.5.4 4.9-.3 6.7-1.7v.1l5 5c .3.3.8.3 1.1 0s .4-.8.1-1.1" fill-rule="evenodd">
+
+										</path>
+									</svg>
+								</div>
+								<div class="search-input">
+									<input type="text" placeholder="search" name="searchByKey" id="searchByKey" class="search_bar" autocomplete="off">
+								</div>
+							</form>
+						</div>
+
+					</div>
+				</div>
+				<div class='collapse navbar-collapse' id='nav-collapse'>
+					<ul class='nav navbar-nav navbar-right'>
+						<li class="active">
+							<a href="{{ url_for('index')}}" data-scroll>Home</a>
+						</li>
+						<li>
+							{% if username %}
+							<a href="{{ url_for('usersCenter')}}" id="usersCenter">
+								{{ username }}
+							</a>
+							{% else %}
+							<a href="{{ url_for('logInAndSignUp')}}" id="LogIn">
+								Log In
+							</a>
+							{% endif %}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<!--======================================================
+			Search Section
+		======================================================-->
+		<div class='search-section'>
+			<div class='container'>
+				<div class="row">
+					<div class="col-md-12">
+						<h2 class="wow fadeInUp feature-lead" data-wow-delay='.2s'>Player Search</h2>
+						<p class="wow fadeInUp feature-sub" data-wow-delay='.2s'>search what you want to know</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="searchBox" style="background-color: transparent;">
+							<div class="_puzkdo">
+								<form name = "searchByFacet" action="/searchByFacet" method="post">
+									<div class="facet_searchForm">
+										<div class="facet_1_box col-md-3 col-sm-3 col-xs-12">
+											<div class="facet_1_text">Name</div>
+											<div class="facet_1_input">
+												<div class="_gor68n">
+													<input type="text" autocomplete="off" class="" id='' list="name_list" name="playerName" placeholder="{{display[0]}}" value="">
+												    <datalist id="name_list">
+														{% for item in facet[0] %}
+														<option>{{item}}</option>
+														{% endfor %}
+													</datalist>
+												</div>
+											</div>
+										</div>
+										<div class="facet_1_box col-md-3 col-sm-3 col-xs-12">
+											<div class="facet_1_text">Team</div>
+											<div class="facet_1_input">
+												<div class="_gor68n">
+													<input type="text" autocomplete="off" class="" id='' list="team_list" name="playerTeam" placeholder="{{display[1]}}" value="">
+													<datalist id="team_list">
+														{% for item in facet[1] %}
+														<option>{{item}}</option>
+														{% endfor %}
+													</datalist>
+												</div>
+											</div>
+
+										</div>
+										<div class="facet_1_box col-md-6 col-sm-6 col-xs-12">
+											<div class="col-xs-6">
+												<div class="facet_1_text">Position</div>
+												<div class="facet_1_input">
+													<div class="_gor68n">
+														<input type="text" autocomplete="off" class="" id='' list="position_list" name="playerPosition" placeholder="{{display[2]}}" value="">
+														<datalist id="position_list">
+														    {% for item in facet[2] %}
+														    <option>{{item}}</option>
+														    {% endfor %}
+													    </datalist>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<button type='submit' class="search-btn btn-custom btn-1 btn-1c">Search</button>
+											</div>
+
+										</div>
+									</div>
+								</form>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        {% endblock %}
+		<!--======================================================
+			Player Section
+		======================================================-->
+        {% for item in searchByFacet %}
+        <section class="container nba-player-season-career-stats">
+            <table role="grid">
+				<thead>
+					<tr>
+						<th><span>
+                  {{item['Season'] }}
+              </span></th>
+						<th scope="col"><abbr title="Team">TM</abbr></th>
+						<th><abbr title="Position">POS</abbr></th>
+                        <th><abbr title="Age">AGE</abbr></th>
+                        <th><abbr title="Two Point Percentage">2P%</abbr></th>
+						<th><abbr title="Three Point Percentage">3P%</abbr></th>
+						<th><abbr title="Free Throw Percentage">FT%</abbr></th>
+						<th><abbr title="Points(total)">PTS</abbr></th>
+						<th><abbr title="Effective Field Goal Percentage">eFG%</abbr></th>
+						<th><abbr title="Assists">AST</abbr></th>
+						<th><abbr title="Steals">STL</abbr></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<th>
+							{{item['Player'] }}
+						</th>
+						<td>
+							—
+						</td>
+						<td>
+							—
+						</td>
+						<td>
+							—
+						</td>
+						<td>
+							—
+						</td>
+						<td>
+							—
+						</td>
+						<td>
+							—
+						</td>
+						<td>
+							—
+						</td>
+						<td>
+							—
+						</td>
+                        <td>
+							—
+						</td>
+                        <td>
+							—
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<form action="/savedSearch" name="savedSearch" method="post">
+								<input type="hidden" id='' name="searchItem" value="{{ item }}">
+							    <div class="love" >
+									<button type="submit" class="_1rp5252 center-align" style="padding:10px;margin:-10px" aria-busy="false">
+									   {% if item in loves %}
+										<svg id="{{ loop.index }}" style="height:24px;width:24px;display:block" viewBox="0 0 32 32" fill="#FF5A5F" fill-opacity="0.8" stroke="#ffffff" stroke-width="2.5" aria-label="" role="img" stroke-linecap="round" stroke-linejoin="round" >
+										<path d="m23.99 2.75c-.3 0-.6.02-.9.05-1.14.13-2.29.51-3.41 1.14-1.23.68-2.41 1.62-3.69 2.94-1.28-1.32-2.46-2.25-3.69-2.94-1.12-.62-2.27-1-3.41-1.14a7.96 7.96 0 0 0 -.9-.05c-1.88 0-7.26 1.54-7.26 8.38 0 7.86 12.24 16.33 14.69 17.95a1 1 0 0 0 1.11 0c2.45-1.62 14.69-10.09 14.69-17.95 0-6.84-5.37-8.38-7.26-8.38">
+										</path>
+									    </svg>
+										{% else %}
+										<svg id="{{ loop.index }}" style="height:24px;width:24px;display:block" viewBox="0 0 32 32" fill="#484848" fill-opacity="0.5" stroke="#ffffff" stroke-width="2.5" aria-label="" role="img" stroke-linecap="round" stroke-linejoin="round" >
+										<path d="m23.99 2.75c-.3 0-.6.02-.9.05-1.14.13-2.29.51-3.41 1.14-1.23.68-2.41 1.62-3.69 2.94-1.28-1.32-2.46-2.25-3.69-2.94-1.12-.62-2.27-1-3.41-1.14a7.96 7.96 0 0 0 -.9-.05c-1.88 0-7.26 1.54-7.26 8.38 0 7.86 12.24 16.33 14.69 17.95a1 1 0 0 0 1.11 0c2.45-1.62 14.69-10.09 14.69-17.95 0-6.84-5.37-8.38-7.26-8.38">
+										</path>
+									    </svg>
+										{% endif %}
+
+								     </button>
+							    </div>
+							</form>
+						</th>
+						<td>
+							{{item['Tm'] }}
+						</td>
+						<td>
+							{{item['Pos'] }}
+						</td>
+						<td>
+							{{item['Age'] }}
+						</td>
+						<td>
+							{{item['2P%'] }}
+						</td>
+						<td>
+							{{item['3P%'] }}
+						</td>
+						<td>
+							{{item['FT%'] }}
+						</td>
+						<td>
+							{{item['PTS'] }}
+						</td>
+						<td>
+							{{item['eFG%'] }}
+						</td>
+                        <td>
+							{{item['AST'] }}
+						</td>
+                        <td>
+							{{item['STL'] }}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+        </section>
+        {% endfor %}
+		<!--======================================================
+			Footer
+		======================================================-->
+		<footer class="ls-footer">
+			<p>Copyright &nbsp;<span>© &nbsp;</span>2018 Data Management</p>
+		</footer>
+
+		<!--======================================================
+			JavaScript Files
+		======================================================-->
+		<script src='/static/js/jquery-3.1.1.min.js'></script>
+		<script src='/static/js/bootstrap.min.js'></script>
+		<script src='/static/js/wow.min.js'></script>
+		<script src='/static/js/script.js'></script>
+	<script type="text/javascript">
+			$(document).ready(function() {
+			     id_click = []
+			     $('svg').click(function () {
+			         loves = $(this).attr('id')
+					 if ($.inArray(loves,id_click) == -1) {
+			             $('#'+loves).css('fill','#FF5A5F')
+				         $('#' +loves).css('fill-opacity','0.8')
+					     id_click.push(loves)
+					 }
+					 else{
+						 $('#'+loves).css('fill','#484848')
+				         $('#'+loves).css('fill-opacity','0.5')
+					     id_click = jQuery.grep(id_click, function(value) {
+					         return value != loves;
+					     });
+					 }
+                 })
+			});
+
+		</script>
+	</body>
+
+</html>
